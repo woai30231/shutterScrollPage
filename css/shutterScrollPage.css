@@ -63,6 +63,30 @@ body{
 	-o-transition:opacity 1s;
 	transition:opacity 1s;
 }
+.shutterScrollPage .switchNav{
+	position:absolute;
+	left:50%;
+	bottom:10px;
+	top:auto;
+	z-index:999;
+}
+.shutterScrollPage .switchNav li{
+	float:left;
+	width:10px;
+	height:10px;
+	border:1px solid #ccc;
+	-webkit-border-radius:50%;
+	-moz-border-radius:50%;
+	-ms-border-radius:50%;
+	-o-border-radius:50%;
+	border-radius:50%;
+	margin-right:8px;
+	background-color:transparent;
+}
+.shutterScrollPage .switchNav li.active{
+	border-color:#666;
+	background-color:cyan;
+}
 @media (min-width:1200px){
 	.container{
 		width:1200px;
