@@ -91,6 +91,42 @@ body{
 	border-color:#666;
 	background-color:cyan;
 }
+.shutterScrollPage  .leftButton,.shutterScrollPage  .rightButton{
+	position:absolute;
+	width:1.0em;
+	padding:0.4em;
+	-webkit-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	-ms-box-sizing:content-box;
+	-o-box-sizing:content-box;
+	box-sizing:content-box;
+	top:50%;
+	z-index:999;
+	background-color:rgba(0,0,0,0.6);
+	margin-top:-0.7em;
+	opacity:0.5;
+	color:#fff;
+	font-size:30px;
+	font-weight:bold;
+	cursor:pointer;
+}
+.shutterScrollPage  .leftButton{
+	left:0.2em;
+}
+.shutterScrollPage  .leftButton:before{
+	content:"<";
+	display:inline-block;
+}
+.shutterScrollPage  .rightButton{
+	right:0.2em;
+}
+.shutterScrollPage  .rightButton:before{
+	content:">";
+	display:inline-block;
+}
+.shutterScrollPage:hover  .leftButton,.shutterScrollPage:hover  .rightButton{
+	opacity:1;
+}
 @media (min-width:1200px){
 	.container{
 		width:1200px;
