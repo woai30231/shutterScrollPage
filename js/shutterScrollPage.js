@@ -26,6 +26,9 @@ ShutterScroll.prototype = {
 		this._tempLeft = 0;
 		//初始left位置
 		this.leftInstance = 0;
+		//定义一个数组用于切换当前显示的图片
+		this.switchArr = null;
+		this._mainSwitchFun();
 		//页面钢加载进来的时候就要算出li的宽度
 		this.initWidthAndHeight();
 		//窗口改变时候也要执行
@@ -36,7 +39,7 @@ ShutterScroll.prototype = {
 		var clearIntervalId = setInterval(function(){
 			_that.leftGo();
 		},3000);
-		this.wrap.onmouseover = function(){
+		this.wrap.onmouseover = function(){ 
 			clearInterval(clearIntervalId);
 		};
 		this.wrap.onmouseout = function(){
@@ -46,11 +49,14 @@ ShutterScroll.prototype = {
 		};
 		this.currentNewLi(0);
 		this.newNavLiClick();
+		// this._mainSwitchFun();
+		// this._mainSwitchCurrentLi();
 	},
 	initWidthAndHeight : function(){
 		var _that = this;
 		var wrapWidth = this.wrap.offsetWidth;
-		this.oUl.style.width = (wrapWidth *this.oLi.length) + 'px';
+		// this.oUl.style.width = (wrapWidth *this.oLi.length) + 'px';
+		this.oUl.style.width = wrapWidth + 'px';
 		var arr = [];
 		for(var i = 0,len = this.oLi.length;i<len;i++){
 			this.oLi[i].style.width = wrapWidth + 'px';
@@ -61,6 +67,7 @@ ShutterScroll.prototype = {
 		for(var j = 0,len = this.oLi.length;j<len;j++){
 			this.oLi[j].style.lineHeight = lineHeight + 'px';
 		};
+		this.oUl.style.height = lineHeight + 'px';
 	},
 	addEvent : function(type,dom,handler){
 		return  dom.addEventListener?dom.addEventListener(type,handler,false):dom.attachEvent("on"+type,handler);
@@ -94,19 +101,30 @@ ShutterScroll.prototype = {
 		};
 	},
 	leftGo : function(){
+		var _that = this;
 		this.leftInstance += this.wrap.offsetWidth;
 		this.gone();
-		if(this.leftInstance<= (this.wrap.offsetWidth * (this.oLi.length - 1)) && this.leftInstance >=0){
-			this.oUl.style.left = -this.leftInstance + 'px';
-			var tempNum = Math.floor(this.leftInstance/this.oLi[0].offsetWidth)
-			this.currentLi(tempNum);
-			this.currentNewLi(tempNum);
-		}else{
-			this.leftInstance = 0;
-			this.oUl.style.left = 0 + 'px';
-			this.currentLi(0);
-			this.currentNewLi(0);
+		var tempNum = _that._mainSwitchCurrentLi();
+		this.currentLi(tempNum);
+		this.currentNewLi(tempNum);
+	},
+	//修复最开始的窗口放生onresize时，插件的显示问题
+	_mainSwitchFun : function(){
+		var arr = [];
+		for(var i = 0,len = this.oLi.length;i<len;i++){
+			(function(n){
+				arr.push(n);
+			})(i);
 		};
+		this.switchArr = arr;
+		return arr;
+	},
+	_mainSwitchCurrentLi : function(){
+		var _that = this;
+		this.switchArr.unshift(_that.switchArr.pop());
+		//因为最开始就切换了一次，也就是说，此时的this.switchArr[0]返回的是数字this.oLi.length;为了让他从第一个开始走，所以应该返回
+		console.log(this.switchArr[1]);
+		return this.switchArr[1];
 	},
 	addSwitchNav : function(){
 		var _that = this;
@@ -158,10 +176,7 @@ ShutterScroll.prototype = {
 			(function(n){
 				li[n].onclick = function(){
 					_that.gone();
-					_that.leftInstance = n * _that.wrap.offsetWidth;
-					_that.oUl.style.left = -_that.leftInstance + 'px';
-					_that.oLi[n].style.opacity = 1;
-					_that._image[n].style.opacity = 1;
+					_that.currentLi(n);
 					_that.currentNewLi(n);
 				};
 			})(i);
